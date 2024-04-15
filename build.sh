@@ -1,0 +1,1 @@
+bazel build //cmd/beacon-chain:beacon-chain  
