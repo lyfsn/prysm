@@ -487,7 +487,7 @@ func (s *Service) requestBatchedHeadersAndLogs(ctx context.Context) error {
 		log.Infof("Falling back to historical headers and logs sync. Current difference is %d", requestedBlock-s.latestEth1Data.LastRequestedBlock)
 		return s.processPastLogs(ctx)
 	}
-	fmt.Println("----debug---00252-----")
+	fmt.Println("----debug---00252-----", s.latestEth1Data.LastRequestedBlock, requestedBlock)
 
 	for i := s.latestEth1Data.LastRequestedBlock + 1; i <= requestedBlock; i++ {
 		// Cache eth1 block header here.
