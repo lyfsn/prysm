@@ -1,8 +1,8 @@
 bazel run //cmd/beacon-chain --  \
    --accept-terms-of-use=true \
-   --datadir=./consensus-data \
-   --chain-config-file=./el-cl-genesis-data/custom_config_data/config.yaml \
-   --genesis-state=./el-cl-genesis-data/custom_config_data/genesis.ssz \
+   --datadir=/root/prysm/consensus-data \
+   --chain-config-file=/root/prysm/el-cl-genesis-data/custom_config_data/config.yaml \
+   --genesis-state=/root/prysm/el-cl-genesis-data/custom_config_data/genesis.ssz \
    --execution-endpoint=http://execution:8551 \
    --rpc-host=0.0.0.0 \
    --rpc-port=3500 \
@@ -18,7 +18,7 @@ bazel run //cmd/beacon-chain --  \
    --enable-debug-rpc-endpoints=true \
    --verbosity=info \
    --suggested-fee-recipient=0x6D39C4E60dEf1DfC6d09A8FdB5D075e85F0e5F8d \
-   --jwt-secret=./el-cl-genesis-data/jwt/jwtsecret \
+   --jwt-secret=/root/prysm/el-cl-genesis-data/jwt/jwtsecret \
    --disable-monitoring=false \
    --monitoring-host=0.0.0.0 \
    --monitoring-port=8080 \
