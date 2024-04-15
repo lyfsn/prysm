@@ -303,6 +303,8 @@ func createGenesisTime(timeStamp uint64) uint64 {
 // processPastLogs processes all the past logs from the deposit contract and
 // updates the deposit trie with the data from each individual log.
 func (s *Service) processPastLogs(ctx context.Context) error {
+	fmt.Println("---aaa----1---", s.latestEth1Data.LastRequestedBlock)
+
 	currentBlockNum := s.latestEth1Data.LastRequestedBlock
 	deploymentBlock := params.BeaconNetworkConfig().ContractDeploymentBlock
 	// Start from the deployment block if our last requested block
