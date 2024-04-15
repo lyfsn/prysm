@@ -3,7 +3,7 @@ bazel run //cmd/beacon-chain --  \
    --datadir=/root/prysm/consensus-data \
    --chain-config-file=/root/prysm/el-cl-genesis-data/custom_config_data/config.yaml \
    --genesis-state=/root/prysm/el-cl-genesis-data/custom_config_data/genesis.ssz \
-   --execution-endpoint=http://execution:8551 \
+   --execution-endpoint=http://127.0.0.1:8551 \
    --rpc-host=0.0.0.0 \
    --rpc-port=3500 \
    --grpc-gateway-host=0.0.0.0 \
