@@ -307,6 +307,7 @@ func (s *Service) processPastLogs(ctx context.Context) error {
 
 	currentBlockNum := s.latestEth1Data.LastRequestedBlock
 	deploymentBlock := params.BeaconNetworkConfig().ContractDeploymentBlock
+	fmt.Println("---aaa----1.1---", deploymentBlock)
 	// Start from the deployment block if our last requested block
 	// is behind it. This is as the deposit logs can only start from the
 	// block of the deployment of the deposit contract.
