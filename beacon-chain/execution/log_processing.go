@@ -341,6 +341,8 @@ func (s *Service) processPastLogs(ctx context.Context) error {
 	s.latestEth1Data.LastRequestedBlock = currentBlockNum
 	s.latestEth1DataLock.Unlock()
 
+	fmt.Println("---aaa---0---", s.latestEth1Data.LastRequestedBlock)
+
 	c, err := s.cfg.beaconDB.FinalizedCheckpoint(ctx)
 	if err != nil {
 		return err
@@ -452,6 +454,8 @@ func (s *Service) processBlockInBatch(ctx context.Context, currentBlockNum uint6
 			// in the event of an execution client failure.
 			s.latestEth1DataLock.Lock()
 			s.latestEth1Data.LastRequestedBlock = lastReqBlock
+			fmt.Println("---aaa---1---", s.latestEth1Data.LastRequestedBlock)
+
 			s.latestEth1DataLock.Unlock()
 			return 0, 0, err
 		}
@@ -490,6 +494,7 @@ func (s *Service) requestBatchedHeadersAndLogs(ctx context.Context) error {
 	fmt.Println("----debug---00252-----", s.latestEth1Data.LastRequestedBlock, requestedBlock)
 
 	for i := s.latestEth1Data.LastRequestedBlock + 1; i <= requestedBlock; i++ {
+		fmt.Println("----debug---00253-----", i)
 		// Cache eth1 block header here.
 		_, err := s.BlockHashByHeight(ctx, new(big.Int).SetUint64(i))
 		if err != nil {
@@ -503,7 +508,7 @@ func (s *Service) requestBatchedHeadersAndLogs(ctx context.Context) error {
 		s.latestEth1Data.LastRequestedBlock = i
 		s.latestEth1DataLock.Unlock()
 	}
-	fmt.Println("----debug---00253-----")
+	fmt.Println("----debug---00254-----")
 
 	return nil
 }
