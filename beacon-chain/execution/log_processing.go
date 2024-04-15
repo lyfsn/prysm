@@ -62,6 +62,8 @@ func (s *Service) GenesisExecutionChainInfo() (uint64, *big.Int) {
 
 // ProcessETH1Block processes logs from the provided eth1 block.
 func (s *Service) ProcessETH1Block(ctx context.Context, blkNum *big.Int) error {
+	fmt.Println("----debug---002521-----")
+
 	query := ethereum.FilterQuery{
 		Addresses: []common.Address{
 			s.cfg.depositContractAddr,
@@ -69,6 +71,8 @@ func (s *Service) ProcessETH1Block(ctx context.Context, blkNum *big.Int) error {
 		FromBlock: blkNum,
 		ToBlock:   blkNum,
 	}
+	fmt.Println("----debug---002522-----")
+
 	logs, err := s.httpLogger.FilterLogs(ctx, query)
 	if err != nil {
 		return err
@@ -82,6 +86,8 @@ func (s *Service) ProcessETH1Block(ctx context.Context, blkNum *big.Int) error {
 			return errors.Wrap(err, "could not process log")
 		}
 	}
+	fmt.Println("----debug---002523-----")
+
 	if !s.chainStartData.Chainstarted {
 		if err := s.processChainStartFromBlockNum(ctx, blkNum); err != nil {
 			return err
@@ -93,10 +99,14 @@ func (s *Service) ProcessETH1Block(ctx context.Context, blkNum *big.Int) error {
 // ProcessLog is the main method which handles the processing of all
 // logs from the deposit contract on the eth1 chain.
 func (s *Service) ProcessLog(ctx context.Context, depositLog *gethtypes.Log) error {
+	fmt.Println("----debug---002522-1----")
+
 	s.processingLock.RLock()
 	defer s.processingLock.RUnlock()
 	// Process logs according to their event signature.
 	if depositLog.Topics[0] == depositEventSignature {
+		fmt.Println("----debug---002522-2----")
+
 		if err := s.ProcessDepositLog(ctx, depositLog); err != nil {
 			return errors.Wrap(err, "Could not process deposit log")
 		}
@@ -466,6 +476,7 @@ func (s *Service) processBlockInBatch(ctx context.Context, currentBlockNum uint6
 func (s *Service) requestBatchedHeadersAndLogs(ctx context.Context) error {
 	// We request for the nth block behind the current head, in order to have
 	// stabilized logs when we retrieve it from the eth1 chain.
+	fmt.Println("----debug---00251-----")
 
 	requestedBlock, err := s.followedBlockHeight(ctx)
 	if err != nil {
@@ -476,6 +487,8 @@ func (s *Service) requestBatchedHeadersAndLogs(ctx context.Context) error {
 		log.Infof("Falling back to historical headers and logs sync. Current difference is %d", requestedBlock-s.latestEth1Data.LastRequestedBlock)
 		return s.processPastLogs(ctx)
 	}
+	fmt.Println("----debug---00252-----")
+
 	for i := s.latestEth1Data.LastRequestedBlock + 1; i <= requestedBlock; i++ {
 		// Cache eth1 block header here.
 		_, err := s.BlockHashByHeight(ctx, new(big.Int).SetUint64(i))
@@ -490,6 +503,7 @@ func (s *Service) requestBatchedHeadersAndLogs(ctx context.Context) error {
 		s.latestEth1Data.LastRequestedBlock = i
 		s.latestEth1DataLock.Unlock()
 	}
+	fmt.Println("----debug---00253-----")
 
 	return nil
 }

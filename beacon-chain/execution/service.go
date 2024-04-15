@@ -456,8 +456,11 @@ func safelyHandlePanic() {
 }
 
 func (s *Service) handleETH1FollowDistance() {
+	fmt.Println("----debug---0021-----")
+
 	defer safelyHandlePanic()
 	ctx := s.ctx
+	fmt.Println("----debug---0022-----")
 
 	// use a 5 minutes timeout for block time, because the max mining time is 278 sec (block 7208027)
 	// (analyzed the time of the block from 2018-09-01 to 2019-02-13)
@@ -466,6 +469,8 @@ func (s *Service) handleETH1FollowDistance() {
 	if time.Unix(int64(s.latestEth1Data.BlockTime), 0).Before(fiveMinutesTimeout) {
 		log.Warn("Execution client is not syncing")
 	}
+	fmt.Println("----debug---0023-----", !s.chainStartData.Chainstarted)
+
 	if !s.chainStartData.Chainstarted {
 		if err := s.processChainStartFromBlockNum(ctx, big.NewInt(int64(s.latestEth1Data.LastRequestedBlock))); err != nil {
 			s.runError = errors.Wrap(err, "processChainStartFromBlockNum")
@@ -473,6 +478,7 @@ func (s *Service) handleETH1FollowDistance() {
 			return
 		}
 	}
+	fmt.Println("----debug---0024-----")
 
 	// If the last requested block has not changed,
 	// we do not request batched logs as this means there are no new
@@ -482,11 +488,15 @@ func (s *Service) handleETH1FollowDistance() {
 		log.WithField("lastBlockNumber", s.latestEth1Data.LastRequestedBlock).Error("Beacon node is not respecting the follow distance. EL client is syncing.")
 		return
 	}
+	fmt.Println("----debug---0025-----")
+
 	if err := s.requestBatchedHeadersAndLogs(ctx); err != nil {
 		s.runError = errors.Wrap(err, "requestBatchedHeadersAndLogs")
 		log.Error(err)
 		return
 	}
+	fmt.Println("----debug---0026-----")
+
 	// Reset the Status.
 	if s.runError != nil {
 		s.runError = nil
@@ -597,14 +607,18 @@ func (s *Service) run(done <-chan struct{}) {
 			log.Debug("Context closed, exiting goroutine")
 			return
 		case <-s.eth1HeadTicker.C:
+			fmt.Println("----debug---001-----")
 			head, err := s.HeaderByNumber(s.ctx, nil)
 			if err != nil {
 				s.pollConnectionStatus(s.ctx)
 				log.WithError(err).Debug("Could not fetch latest eth1 header")
 				continue
 			}
+			fmt.Println("----debug---002-----")
 			s.processBlockHeader(head)
+			fmt.Println("----debug---002-----")
 			s.handleETH1FollowDistance()
+			fmt.Println("----debug---003-----")
 		case <-chainstartTicker.C:
 			if s.chainStartData.Chainstarted {
 				chainstartTicker.Stop()
